@@ -1,0 +1,21 @@
+CC = x86_64-w64-mingw32-gcc
+CFLAGS = -Iinclude/winMinGW -Iinclude -Wall
+LDFLAGS = -Llib/winMinGW -lraylib -lopengl32 -lgdi32 -lwinmm -lole32 -lcomdlg32 -luser32 -lshell32
+SOURCES = src/main.c src/tinyfiledialogs.c
+OBJDIR = build/winMinGW/obj
+OBJECTS = $(SOURCES:src/%.c=$(OBJDIR)/%.o)
+EXEC = build/winMinGW/app.exe
+
+all: $(EXEC)
+
+$(EXEC): $(OBJECTS)
+	$(CC) $(OBJECTS) -o $(EXEC) $(LDFLAGS)
+
+$(OBJDIR)/%.o: src/%.c
+	@cmd /C "if not exist $(subst /,\\,$(OBJDIR)) mkdir $(subst /,\\,$(OBJDIR))"
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	del /Q $(OBJDIR)\*.o $(EXEC)
+
+.PHONY: all clean

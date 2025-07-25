@@ -1,0 +1,27 @@
+# MSVC Makefile for nmake
+CC = cl
+CFLAGS = /Iinclude/winMSVC /Iinclude /W3 /D_CRT_SECURE_NO_WARNINGS /nologo /MD
+LDFLAGS = /link /LIBPATH:lib/winMSVC raylib.lib opengl32.lib gdi32.lib winmm.lib ole32.lib comdlg32.lib user32.lib shell32.lib /nologo /NODEFAULTLIB:libucrt.lib
+SOURCES = src\main.c src\tinyfiledialogs.c
+OBJDIR = build\winMSVC\obj
+OBJECTS = $(OBJDIR)\main.obj $(OBJDIR)\tinyfiledialogs.obj
+EXEC = build\winMSVC\app.exe
+
+all: $(EXEC)
+
+$(EXEC): $(OBJECTS)
+    $(CC) $(OBJECTS) /Fe$(EXEC) $(LDFLAGS)
+
+$(OBJDIR)\main.obj: src\main.c
+    @if not exist $(OBJDIR) mkdir $(OBJDIR)
+    $(CC) $(CFLAGS) /c src\main.c /Fo$(OBJDIR)\main.obj
+
+$(OBJDIR)\tinyfiledialogs.obj: src\tinyfiledialogs.c
+    @if not exist $(OBJDIR) mkdir $(OBJDIR)
+    $(CC) $(CFLAGS) /c src\tinyfiledialogs.c /Fo$(OBJDIR)\tinyfiledialogs.obj
+
+clean:
+    if exist $(OBJDIR)\*.obj del /Q $(OBJDIR)\*.obj
+    if exist $(EXEC) del /Q $(EXEC)
+
+.PHONY: all clean

@@ -1,0 +1,20 @@
+CC = gcc
+CFLAGS = -Iinclude/linux -Iinclude -Wall -DUNIX -fno-stack-protector
+LDFLAGS = -Llib/linux -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+SOURCES = src/main.c src/tinyfiledialogs.c
+OBJECTS = $(SOURCES:.c=.o)
+EXEC = build/linux/app
+
+all: $(EXEC)
+
+$(EXEC): $(OBJECTS)
+	mkdir -p $(dir $(EXEC))
+	$(CC) $(OBJECTS) -o $(EXEC) $(LDFLAGS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(OBJECTS) $(EXEC)
+
+.PHONY: all clean

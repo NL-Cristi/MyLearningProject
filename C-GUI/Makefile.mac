@@ -1,0 +1,19 @@
+CC = clang
+CFLAGS = -Iinclude/mac -Iinclude -Wall -DUNIX
+LDFLAGS = -Llib/mac -lraylib -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
+SOURCES = src/main.c src/tinyfiledialogs.c
+OBJECTS = $(SOURCES:.c=.o)
+EXEC = build/mac/app
+
+all: $(EXEC)
+
+$(EXEC): $(OBJECTS)
+    $(CC) $(OBJECTS) -o $(EXEC) $(LDFLAGS)
+
+%.o: %.c
+    $(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+    rm -f $(OBJECTS) $(EXEC)
+
+.PHONY: all clean
